@@ -8,6 +8,7 @@
 | Repository | `kryptosmatrix/int-llm` (fork). Upstream is `nmicic/int-llm` |
 | Read at | `0b4b6d04eb3e9e969d125804a154309eed3be9de`, branch `main`, clean tree. **Every line reference below was read there.** Nothing was compiled or run |
 | Covers | Six defects across `fp_math.h` and `llama_int.c`, and the sequencing method that keeps the determinism gate meaningful while they are fixed |
+| Parent | `DETERMINISTIC_CPU_GPU_PROGRAMME.md` — this register is executed by that programme's stages 1 and 2. **A seventh defect, D7, is recorded there**: the build requires `-fwrapv`, so the determinism holds only under one compiler flag |
 
 ---
 
