@@ -277,10 +277,32 @@ zero is to make that false.
 `int-llm` facts read at `0b4b6d04eb3e9e969d125804a154309eed3be9de`: the Makefile's flags and
 targets, `fp_math.h`'s state and initialisation, `llama_int.c`'s three kernel defects, and the
 golden value. ARCHE-Int contracts are cited from the blueprint family at the head of
-`plumbline/arche-int-plans` and are **specification, not executed behaviour**. ANANKE's guarantees
-are read from its `README.md` and are **the project's own stated claims, not verified here** — the
-first thing S3's owner should do is run its CLI and confirm the CPU and GPU digests match on this
-machine, because the whole inheritance in §3 rests on that being true.
+`plumbline/arche-int-plans` and are **specification, not executed behaviour**. **ANANKE was tested on 2026-08-18 rather than
+taken on trust, and the result narrows what §2 and §3 may claim from it.**
+
+*What ran, on an Apple M3 Max, macOS 26.5.2, arm64, `ananke 0.1.0`, Metal reported available:*
+`swift build` clean; `swift test` **76 tests, 0 failures**; and the README's `run` invocation
+across six configurations — CPU and GPU modes, one worker and eight and three, parallel on and
+off — all returning the **identical** digest `83ec0ad8…f97a1bb2`. A negative control with the seed
+changed from 42 to 43 returns a different digest, so the harness can detect a difference.
+
+*What that does and does not establish, and the distinction is load-bearing.* The CLI's own usage
+line reads "Run deterministic CPU or **GPU-generated** pipeline", and the code path matches:
+`PipelineMode.gpu` requires a **work-item generator** and `saturate` calls
+`SalienceDeltaGeneratorGPU.generateWorkItems` followed by `CPUPipelineRunner.runPipelineOnce`. So
+what is demonstrated is that **Metal-generated work items produce a digest identical to
+CPU-generated ones**, with the pipeline computation itself running on CPU in both modes. That is a
+genuine and useful result — Metal compute producing bit-identical output to a CPU path on this
+hardware — and it is **narrower than "the same pipeline runs on CPU or GPU"**, which is how the
+`README.md` states it and how an earlier revision of this plan repeated it.
+
+*Bound on this finding:* read from the CLI help, two call sites and a fragment of
+`SaliencePipeline.swift` under a thinned context, and confirmed by run rather than by audit. **The
+Metal-side share of the work should be re-derived before S5 depends on it.** The working copy at
+`$HOME/GitHub/ANANKE` is **not a git repository**, so this result is pinned to no commit — pin it
+before citing it.
+
+Nothing else here was executed: no `make` in this repository, and no ARCHE-Int test.
 
 ---
 
